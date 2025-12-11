@@ -5,9 +5,8 @@ A Smart AI-Driven Personal Finance & Investment Assistant Platform built using s
 This project is currently under development.  
 At present, **user-service** is implemented, and other services will be added in upcoming phases.
 
----
-
 ## 📁 Project Folder Structure
+
 
 fin-genius-ai-platform/
 ├─ api-gateway/ # API Gateway (Spring Cloud Gateway)
@@ -19,6 +18,7 @@ fin-genius-ai-platform/
 ├─ ai-advisory-service/ # AI investment advisory (LangChain4j)
 ├─ common-lib/ # Shared DTOs, exceptions, utils
 └─ docker/ # Docker & Kubernetes configs (upcoming)
+
 
 
 
