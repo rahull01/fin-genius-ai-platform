@@ -7,19 +7,18 @@ At present, **user-service** is implemented, and other services will be added in
 
 ## 📁 Project Folder Structure
 
-
+```
 fin-genius-ai-platform/
-├─ api-gateway/ # API Gateway (Spring Cloud Gateway)
-├─ discovery-server/ # Eureka Discovery Server
-├─ user-service/ # User Management Service (Implemented)
-├─ transaction-service/ # User transactions & budgeting
-├─ analytics-service/ # Insights, reports & dashboards
-├─ notification-service/ # Email, SMS, App alerts
-├─ ai-advisory-service/ # AI investment advisory (LangChain4j)
-├─ common-lib/ # Shared DTOs, exceptions, utils
-└─ docker/ # Docker & Kubernetes configs (upcoming)
-
-
+ ├─ api-gateway/                # API Gateway (Spring Cloud Gateway)
+ ├─ discovery-server/           # Eureka Discovery Server
+ ├─ user-service/               # User Management Service (Implemented)
+ ├─ transaction-service/        # User transactions & budgeting
+ ├─ analytics-service/          # Insights, reports & dashboards
+ ├─ notification-service/       # Email, SMS, App alerts
+ ├─ ai-advisory-service/        # AI investment advisory (LangChain4j)
+ ├─ common-lib/                 # Shared DTOs, exceptions, utils
+ └─ docker/                     # Docker & Kubernetes configs (upcoming)
+```
 
 
 ---
