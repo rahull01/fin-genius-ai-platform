@@ -1,14 +1,15 @@
 package com.user_service.FinGeniusUser.service;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
+
 import com.user_service.FinGeniusUser.dto.UserRegistrationRequest;
 import com.user_service.FinGeniusUser.dto.UserResponse;
 import com.user_service.FinGeniusUser.entity.User;
 import com.user_service.FinGeniusUser.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.stereotype.Service;
 
 
 @Service
@@ -61,4 +62,25 @@ public class UserServiceImpl implements UserService
                 .currency(user.getCurrency())
                 .build();
     }
-}
+
+    @Override
+    public UserResponse login(UserRegistrationRequest request) {
+          User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
+
+        // Check password
+        if (!BCrypt.checkpw(request.getPassword(), user.getPasswordHash())) {
+            throw new IllegalArgumentException("Invalid Password");
+        }
+
+        return UserResponse.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .country(user.getCountry())
+                .currency(user.getCurrency())
+                .build();
+    }
+    }
+

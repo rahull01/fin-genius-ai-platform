@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="ai.html">AI Advisor</a>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+</div>
+
+<div class="page">
+
+    <h2>Welcome, <span id="userName"></span></h2>
+
+    <div class="card">
+        <h3>Summary</h3>
+        <p><b>Total Credit:</b> ₹<span id="sumCredit"></span></p>
+        <p><b>Total Debit:</b> ₹<span id="sumDebit"></span></p>
+        <p><b>Net Balance:</b> ₹<span id="sumBalance"></span></p>
+    </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

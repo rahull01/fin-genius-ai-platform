@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register | FinGenius</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/theme.js"></script>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="card" style="max-width:420px; margin:auto; margin-top:70px;">
+        <h2>Create Your Account</h2>
+
+        <!-- Full Name -->
+        <input id="regName" placeholder="Full Name">
+
+        <!-- Email -->
+        <input id="regEmail" placeholder="Email">
+
+        <!-- Password -->
+        <input id="regPassword" type="password" placeholder="Password">
+
+        <!-- Role -->
+        <select id="regRole">
+            <option value="" disabled selected>Select Role</option>
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+        </select>
+
+        <!-- Country -->
+        <input id="regCountry" placeholder="Country">
+
+        <!-- Currency -->
+        <input id="regCurrency" placeholder="Currency (USD / INR / EUR)">
+
+        <button class="btn" onclick="registerUser()">Sign Up</button>
+
+        <button class="btn" style="background:#555;"
+                onclick="window.location='login.html'">Back</button>
+    </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
