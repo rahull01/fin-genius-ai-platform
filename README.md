@@ -25,16 +25,15 @@ fin-genius-ai-platform/
 
 ## 🚀 Current Status
 
-| Service Name          | Status        | Description                           |
-|----------------------|---------------|---------------------------------------|
-| **user-service**     | ✔ Implemented | Handles user registration, login, profile |
-| api-gateway          | ❌ Pending    | Routing, authentication               |
-| discovery-server     | ❌ Pending    | Eureka service registry               |
-| transaction-service  | ⌛ Planned    | Expense tracking, transactions        |
-| analytics-service    | ⌛ Planned    | Financial analytics, insights         |
-| notification-service | ⌛ Planned    | Email/SMS/Push notifications          |
-| ai-advisory-service  | ⌛ Planned    | AI-powered investment advisory        |
-| common-lib           | ⌛ Planned    | Shared DTOs & exception handling      |
+| Service Name          | Status        | Description                               
+|----------------------|---------------|---------------------------------------------|
+| **user-service**     | ✔ Implemented | Handles user registration, login, profile  |
+| api-gateway          | ✔ Implemented | Routing, authentication                    |
+| discovery-server     | ✔ Implemented | Eureka service registry                    |
+| transaction-service  | ✔ Implemented | Expense tracking, transactions             |
+| analytics-service    | ✔ Implemented | Financial analytics, insights              |
+| notification-service | ✔ Implemented | Email/SMS/Push notifications               |
+| ai-advisory-service  | ✔ Implemented | AI-powered investment advisory             |
 
 ---
 
