@@ -1,0 +1,21 @@
+:root{
+  --primary:#4f46e5;
+  --secondary:#9333ea;
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+}
+
+body{
+  margin:0;
+  font-family:Poppins;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f8fafc;
+}

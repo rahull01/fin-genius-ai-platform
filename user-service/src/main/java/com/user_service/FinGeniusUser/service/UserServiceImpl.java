@@ -1,5 +1,6 @@
 package com.user_service.FinGeniusUser.service;
 
+import com.user_service.FinGeniusUser.dto.UserLoginRequest;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -48,9 +49,9 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public UserResponse getUserByEmail(String email)
+    public UserResponse getUserById(Long id)
     {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("User Not Found"));
 
         return UserResponse.builder()
@@ -63,12 +64,13 @@ public class UserServiceImpl implements UserService
                 .build();
     }
 
+
     @Override
-    public UserResponse login(UserRegistrationRequest request) {
-          User user = userRepository.findByEmail(request.getEmail())
+    public UserResponse login(UserLoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
 
-        // Check password
         if (!BCrypt.checkpw(request.getPassword(), user.getPasswordHash())) {
             throw new IllegalArgumentException("Invalid Password");
         }

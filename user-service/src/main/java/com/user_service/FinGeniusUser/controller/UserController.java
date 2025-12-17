@@ -1,5 +1,6 @@
 package com.user_service.FinGeniusUser.controller;
 
+import com.user_service.FinGeniusUser.dto.UserLoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,14 +31,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserRegistrationRequest request) {
+    public ResponseEntity<UserResponse> login(
+            @Valid @RequestBody UserLoginRequest request
+    ) {
         UserResponse userResponse = userService.login(request);
         return ResponseEntity.ok(userResponse);
     }
 
-    @GetMapping("/get_user/{email}")
-    public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
-        UserResponse userResponse = userService.getUserByEmail(email);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getByEmail(@PathVariable Long id) {
+        UserResponse userResponse = userService.getUserById(id);
         return ResponseEntity.ok(userResponse);
     }
 }

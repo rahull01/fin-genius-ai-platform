@@ -38,6 +38,9 @@ public class transaction {
         this.timestamp = timestamp;
     }
 
+
+
+
     @PrePersist
     public void pre() {
         this.timestamp = LocalDateTime.now();

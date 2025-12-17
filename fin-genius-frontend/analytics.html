@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FinGenius | Analytics</title>
+    <style>
+        body{font-family:Poppins;background:#f4f6fb}
+        header{background:#FD1D1D;color:#fff;padding:16px}
+        .card{background:#fff;padding:20px;border-radius:12px;margin:30px}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="dashboard.html" style="color:white;text-decoration:none">⬅ Back</a>
+</header>
+
+<div class="card">
+    <h2>Spending Summary</h2>
+    <p>Total Credit: ₹<span id="credit"></span></p>
+    <p>Total Debit: ₹<span id="debit"></span></p>
+    <p>Balance: ₹<span id="balance"></span></p>
+</div>
+
+<script>
+    const API = "http://localhost:8086";
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    fetch(`${API}/api/analytics/user/${user.id}/summary`)
+      .then(r=>r.json())
+      .then(s=>{
+        credit.innerText = s.totalCredit;
+        debit.innerText = s.totalDebit;
+        balance.innerText = s.netBalance;
+      });
+</script>
+
+</body>
+</html>

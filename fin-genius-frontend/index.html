@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FinGenius | Auth</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *{box-sizing:border-box;font-family:Poppins}
+        body{
+          height:100vh;
+          background:linear-gradient(135deg,#405DE6,#833AB4,#FD1D1D);
+          display:flex;
+          justify-content:center;
+          align-items:center;
+        }
+        .card{
+          background:#fff;
+          width:420px;
+          padding:35px;
+          border-radius:16px;
+          box-shadow:0 25px 60px rgba(0,0,0,.35);
+        }
+        .logo{
+          text-align:center;
+          font-size:30px;
+          font-weight:700;
+          margin-bottom:25px;
+        }
+        .logo span{color:#E1306C}
+        input{
+          width:100%;
+          padding:14px;
+          margin-bottom:14px;
+          border-radius:8px;
+          border:1px solid #ddd;
+        }
+        button{
+          width:100%;
+          padding:14px;
+          border-radius:8px;
+          border:none;
+          font-weight:600;
+          cursor:pointer;
+          color:white;
+        }
+        .login-btn{background:linear-gradient(135deg,#405DE6,#833AB4)}
+        .register-btn{background:linear-gradient(135deg,#FD1D1D,#F77737)}
+        .switch{text-align:center;margin-top:14px;cursor:pointer;font-size:14px}
+        .switch span{color:#E1306C;font-weight:600}
+        .hidden{display:none}
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="logo">Fin<span>Genius</span></div>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+        <input id="loginEmail" placeholder="Email">
+        <input id="loginPassword" type="password" placeholder="Password">
+        <button class="login-btn" onclick="login()">Login</button>
+        <div class="switch" onclick="showRegister()">New user? <span>Create account</span></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerBox" class="hidden">
+        <input id="fullName" placeholder="Full Name">
+        <input id="email" placeholder="Email">
+        <input id="password" type="password" placeholder="Password">
+        <input id="country" placeholder="Country">
+        <input id="currency" placeholder="Currency (INR/USD)">
+        <button class="register-btn" onclick="registerUser()">Sign Up</button>
+        <div class="switch" onclick="showLogin()">Already have an account? <span>Login</span></div>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:8086"; // API-GATEWAY
+
+    function showRegister(){
+      loginBox.classList.add("hidden");
+      registerBox.classList.remove("hidden");
+    }
+
+    function showLogin(){
+      registerBox.classList.add("hidden");
+      loginBox.classList.remove("hidden");
+    }
+
+   // LOGIN
+function login(){
+  fetch(`${API}/api/users/login`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email: loginEmail.value.trim(),
+      password: loginPassword.value.trim()
+    })
+  })
+  .then(r=>{
+    if(!r.ok) throw new Error();
+    return r.json();
+  })
+  .then(data=>{
+    localStorage.setItem("user", JSON.stringify(data));
+    alert("✅ Login successful");
+    window.location.href = "dashboard.html";   // ✅ redirect
+  })
+  .catch(()=>alert("❌ Invalid email or password"));
+}
+
+// REGISTER
+async function registerUser(){
+  const data = {
+    fullName: fullName.value.trim(),
+    email: email.value.trim(),
+    password: password.value.trim(),
+    country: country.value.trim(),
+    currency: currency.value.trim()
+  };
+
+  const response = await fetch(`${API}/api/users/register`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(data)
+  });
+
+  if(!response.ok){
+    const err = await response.text();
+    alert("❌ Registration failed: " + err);
+    return;
+  }
+
+  alert("✅ Account created");
+  window.location.href = "dashboard.html";   // ✅ redirect
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FinGenius | Transactions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Poppins;background:#f4f6fb}
+        nav{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#405DE6,#833AB4);color:#fff;padding:14px 30px}
+        nav a{color:white;margin:0 10px;text-decoration:none;font-weight:500}
+        .logo{font-size:22px;font-weight:700}
+        .profile{position:relative;cursor:pointer}
+        .profile img{width:36px;border-radius:50%}
+        .menu{position:absolute;right:0;top:45px;background:white;color:black;border-radius:10px;width:200px;box-shadow:0 10px 30px rgba(0,0,0,.2);display:none;z-index:10}
+        .menu p{margin:10px;font-size:14px}
+        .menu button{width:90%;margin:10px;border:none;padding:8px;background:#ef4444;color:white;border-radius:6px;cursor:pointer}
+        .container{padding:30px;max-width:1100px;margin:auto}
+        h2{color:#333;margin-bottom:20px}
+        .toast{position:fixed;top:20px;right:20px;background:#16a34a;color:#fff;padding:12px 20px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.2);z-index:999;display:none}
+
+        .grid{display:grid;grid-template-columns:1fr 2fr;gap:24px}
+        @media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+        .form-card{background:white;padding:25px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+        .form-card h3{margin:0 0 10px;color:#4f46e5}
+        .form-card input,.form-card select{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:8px}
+        .form-card button{padding:12px 20px;border:none;background:#4f46e5;color:white;border-radius:8px;cursor:pointer;font-weight:600;width:100%}
+
+        .table-card{background:white;padding:20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+        .table-card h3{margin:0 0 10px;color:#4f46e5}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px;text-align:left;border-bottom:1px solid #eee}
+        th{background:#f9fafb;color:#4f46e5}
+        td.amount{font-weight:600;color:#4f46e5}
+        .filters{display:flex;gap:10px;margin:10px 0}
+        .filters select,.filters input{padding:10px;border:1px solid #ddd;border-radius:8px}
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">FinGenius</div>
+    <div>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="ai-advisor.html">AI Advisor</a>
+        <a href="notifications.html">Notifications</a>
+    </div>
+    <div class="profile" onclick="toggleMenu()">
+        <img src="https://i.pravatar.cc/100">
+        <div id="menu" class="menu">
+            <p id="name"></p>
+            <p id="email"></p>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+</nav>
+
+<div id="toast" class="toast">Saved</div>
+
+<div class="container">
+    <h2>Manage transactions</h2>
+
+    <div class="grid">
+        <!-- Add Transaction -->
+        <div class="form-card">
+            <h3>Add new transaction</h3>
+            <select id="type">
+                <option value="CREDIT">Credit</option>
+                <option value="DEBIT">Debit</option>
+            </select>
+            <input id="amount" type="number" placeholder="Amount (₹)">
+            <input id="category" placeholder="Category (e.g. Food, Travel, Shopping)">
+            <input id="description" placeholder="Description (optional)">
+            <button onclick="addTransaction()">Add transaction</button>
+        </div>
+
+        <!-- History -->
+        <div class="table-card">
+            <h3>Recent transactions</h3>
+            <div class="filters">
+                <select id="filterType" onchange="applyFilters()">
+                    <option value="">All</option>
+                    <option value="CREDIT">Credit</option>
+                    <option value="DEBIT">Debit</option>
+                </select>
+                <input id="filterCategory" placeholder="Filter by category" oninput="applyFilters()">
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Timestamp</th>
+                </tr>
+                </thead>
+                <tbody id="txnTable">
+                <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:8086";
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(!user) location.href="auth.html";
+
+    document.getElementById("name").innerText = user.fullName;
+    document.getElementById("email").innerText = user.email;
+
+    function toggleMenu(){
+      const m = document.getElementById("menu");
+      m.style.display = m.style.display === "block" ? "none" : "block";
+    }
+    function logout(){
+      localStorage.clear();
+      location.href = "auth.html";
+    }
+    function showToast(msg, ok=true){
+      const t = document.getElementById("toast");
+      t.style.background = ok ? "#16a34a" : "#ef4444";
+      t.innerText = msg;
+      t.style.display = "block";
+      setTimeout(()=> t.style.display="none", 3000);
+    }
+    function formatINR(amount){
+      return "₹" + Number(amount || 0).toLocaleString("en-IN");
+    }
+
+    let allTxns = [];
+
+    function loadTransactions(){
+      fetch(`${API}/api/transactions/user/${user.id}`)
+        .then(r => r.json())
+        .then(data => {
+          if(!Array.isArray(data)) data = [];
+          // newest first
+          allTxns = data.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+          renderTransactions(allTxns);
+        })
+        .catch(()=> showToast("Failed to load transactions", false));
+    }
+
+    function renderTransactions(rows){
+      const table = document.getElementById("txnTable");
+      if(rows.length === 0){
+        table.innerHTML = "<tr><td colspan='6'>No transactions found</td></tr>";
+        return;
+      }
+      table.innerHTML = rows.slice(0,25).map(txn =>
+        `<tr>
+          <td>${txn.id}</td>
+          <td>${(txn.type || "").toUpperCase()}</td>
+          <td>${txn.category || '-'}</td>
+          <td>${txn.description || '-'}</td>
+          <td class="amount">${formatINR(txn.amount)}</td>
+          <td>${txn.timestamp}</td>
+        </tr>`
+      ).join("");
+    }
+
+    function applyFilters(){
+      const type = document.getElementById("filterType").value;
+      const cat = document.getElementById("filterCategory").value.trim().toLowerCase();
+      const filtered = allTxns.filter(t => {
+        const byType = type ? (t.type || "").toUpperCase() === type : true;
+        const byCat = cat ? (t.category || "").toLowerCase().includes(cat) : true;
+        return byType && byCat;
+      });
+      renderTransactions(filtered);
+    }
+
+    function addTransaction(){
+      const type = (document.getElementById("type").value || "").toUpperCase();
+      if(type !== "CREDIT" && type !== "DEBIT"){
+        showToast("Type must be CREDIT or DEBIT", false);
+        return;
+      }
+      const txn = {
+        userId: user.id,
+        type,
+        amount: Number(document.getElementById("amount").value),
+        category: document.getElementById("category").value.trim(),
+        description: document.getElementById("description").value.trim()
+      };
+      if(!txn.amount || txn.amount <= 0){
+        showToast("Enter a valid amount", false);
+        return;
+      }
+
+      fetch(`${API}/api/transactions`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(txn)
+      })
+      .then(r => {
+        if(!r.ok) throw new Error("Failed");
+        return r.json();
+      })
+      .then(() => {
+        showToast("✅ Transaction added successfully");
+        loadTransactions();                    // refresh history immediately
+        localStorage.setItem("refreshDashboard", "true"); // signal dashboard to refresh
+      })
+      .catch(() => showToast("❌ Failed to add transaction", false));
+    }
+
+    loadTransactions();
+</script>
+
+</body>
+</html>
